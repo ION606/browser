@@ -1,0 +1,9 @@
+secrets/
+cache/
+node_modules/
+temp.*
+*.rdb
+*.log
+logs/
+temp/
+tmp/

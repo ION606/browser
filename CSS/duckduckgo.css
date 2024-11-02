@@ -1,0 +1,163 @@
+/* general styles */
+body {
+    background-color: #181818; /* darker background */
+    color: #E0E0E0; /* light text for readability */
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    margin: auto;
+}
+
+a {
+    color: #9BBFFF; /* more muted blue links */
+    text-decoration: none;
+}
+
+a:hover {
+    color: #74A0FF; /* slightly lighter blue on hover */
+}
+
+/* header */
+#header {
+    background-color: #212121; /* consistent dark background */
+    padding: 15px 0;
+}
+
+h1 {
+    color: #D9534F; /* softer red for DuckDuckGo title */
+    font-size: 24px;
+    text-align: center;
+    margin: 0;
+}
+
+/* search bar */
+form {
+    /* display: flex; */
+    justify-content: center;
+    padding: 20px 0;
+}
+
+input[type="text"] {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #2C2C2C;
+    color: #E0E0E0;
+    font-size: 16px;
+    margin-right: 10px;
+}
+
+input[type="submit"] {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #74A0FF;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #578AFF;
+}
+
+/* search results */
+#results {
+    padding: 20px;
+}
+
+.result {
+    padding: 15px;
+    margin-bottom: 15px; /* more spacing between results */
+    background-color: #222;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.result:hover {
+    background-color: #333;
+}
+
+.result a {
+    font-size: 18px;
+    color: #9BBFFF;
+}
+
+.result a:hover {
+    color: #74A0FF;
+}
+
+.result .snippet {
+    color: #B0B0B0;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* buttons */
+button, input[type="submit"] {
+    background-color: #505CFF;
+    color: white;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #4266F5;
+}
+
+#footer {
+    background-color: #212121;
+    color: #777;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+#footer a {
+    color: #9BBFFF;
+}
+
+#footer a:hover {
+    color: #74A0FF;
+}
+
+/* fine-tune form elements */
+input[type="text"]::placeholder {
+    color: #999; /* dimmed placeholder */
+}
+
+input[type="text"]:focus {
+    outline: none;
+    background-color: #333;
+}
+
+input[type="submit"]:focus {
+    outline: none;
+}
+
+.link-text {
+    color: lightblue;
+}
+
+
+/* scrollbar styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+}
+
+/* mobile responsiveness */
+@media (max-width: 768px) {
+    input[type="text"] {
+        width: 80%;
+    }
+}

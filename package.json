@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "@atproto/api": "^0.13.12",
+    "@gorhill/ubo-core": "^0.1.30",
+    "cron": "^3.1.7",
+    "dompurify": "^3.1.7",
+    "electron-oauth-helper": "^5.1.1",
+    "electron-oauth2": "^3.0.0",
+    "express": "^4.21.1",
+    "googleapis": "^144.0.0",
+    "jquery": "^3.7.1",
+    "jsdom": "^25.0.1",
+    "mhtml2html": "^3.0.0",
+    "node-cache": "^5.1.2",
+    "open": "^10.1.0",
+    "redis": "^4.7.0",
+    "winston": "^3.15.0"
+  },
+  "build": {
+    "appId": "ion.browser",
+    "linux": {}
+  },
+  "preload": {
+    "js": "./JS/preload.cjs"
+  },
+  "name": "ion-browser",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --trace-warnings --no-sandbox --load-extension",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "the ion browser!",
+  "type": "module",
+  "devDependencies": {
+    "electron": "^33.0.1",
+    "electron-builder": "^25.1.8"
+  }
+}

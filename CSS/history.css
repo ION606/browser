@@ -1,0 +1,37 @@
+#historybar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 20%;
+    min-width: 100px;
+    margin-left: -100%; /* initially off-screen */
+    transition: margin-left 0.5s ease; /* smooth slide-in/out */
+    background-color: rgba(100, 100, 100, 0.6) !important; /* translucent black background */
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 10px 2px;
+    padding-left: 5px;
+    z-index: 99999999999999999999999999999999999999999999999; /* fuck you in particular howtogeek and your goddamn sidebar */
+    font-size: medium !important;
+    color: lightblue !important;
+}
+
+
+#historybar table {
+    border-collapse: separate; /* keep cells separate */
+    border-spacing: 0 10px;
+    width: 100%;
+}
+
+
+#historybar table td {
+    cursor: pointer;
+    /* padding: 5px; */
+    border-bottom: 1px solid rgba(100, 100, 100, 0.8);
+}
+
+
+#historybar table td:hover {
+    background-color: rgba(100, 100, 100, 0.8);;
+}

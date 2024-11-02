@@ -1,0 +1,61 @@
+html {
+    overflow-y: hidden;
+}
+
+.tabs-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    overflow-y: hidden; /* no y overflow */
+    position: relative;
+}
+
+.browser-tabs {
+    display: flex;
+    flex-grow: 1;
+    overflow-y: hidden;
+    overflow-x: auto; /* allow horizontal scrolling if needed */
+    scrollbar-width: thin; /* Firefox-specific scrollbar width */
+    margin-right: 10px;
+}
+
+.tab {
+    padding: 10px 15px;
+    border: none;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background-color 0.3s;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    white-space: nowrap; /* keep text on a single line */
+}
+
+.tab:hover,
+.tab.active {
+    background-color: #ddd;
+}
+
+.add-tab {
+    padding: 7px 12px;
+    border: none;
+    background-color: #4b4b6b; /* dark purple-gray background */
+    color: #ddd; /* light gray text color */
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.add-tab:hover {
+    background-color: #3b3b5a; /* slightly darker shade for hover */
+    color: #fff; /* lighter color on hover */
+}
+
+button {
+    cursor: pointer;
+}

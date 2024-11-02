@@ -1,0 +1,149 @@
+/* general background and text */
+body,
+#page-manager,
+ytd-app {
+    background-color: #11111b !important;
+    /* dark purpleish black */
+    color: #d1d1e9 !important;
+    /* soft light purple text */
+}
+
+/* video background */
+#player-container,
+#movie_player,
+.html5-video-player {
+    background-color: #0f0f17 !important;
+    /* darker background for video */
+}
+
+/* sidebar and primary navigation */
+#container,
+ytd-guide-entry-renderer,
+ytd-mini-guide-renderer {
+    background-color: #181828 !important;
+    /* deep dark purple */
+}
+
+#sections,
+ytd-guide-renderer {
+    background-color: #1b1b2f !important;
+    /* matches body */
+}
+
+/* header and search bar */
+#masthead-container {
+    background-color: #2a2a4d !important;
+    /* dark purplish shade */
+}
+
+#search-icon-legacy {
+    color: #d1d1e9 !important;
+}
+
+/* video title and descriptions */
+#video-title,
+.ytp-chrome-top,
+.ytp-title-text {
+    color: #d1d1e9 !important;
+}
+
+
+/* video progress bar */
+.ytp-play-progress {
+    background-color: #6b5b95 !important;
+    /* purplish progress bar */
+}
+
+.ytp-scrubber-button {
+    background-color: #b794f4 !important;
+    /* purplish scrubber */
+}
+
+/* links and video titles */
+a,
+.yt-simple-endpoint {
+    color: #b794f4 !important;
+    /* purplish links */
+}
+
+a:hover {
+    color: #d1d1e9 !important;
+    /* lighter on hover */
+}
+
+/* comments section */
+ytd-comment-thread-renderer {
+    background-color: #181828 !important;
+    /* dark purpleish black */
+    border: 1px solid #262646 !important;
+}
+
+ytd-comment-renderer #content-text {
+    color: #d1d1e9 !important;
+}
+
+/* misc elements */
+#related,
+#items,
+#panels {
+    background-color: #1b1b2f !important;
+}
+
+/* subscribe button */
+ytd-subscribe-button-renderer {
+    background-color: #6b5b95 !important;
+    color: #ffffff !important;
+}
+
+ytd-subscribe-button-renderer:hover {
+    background-color: #9d7bcf !important;
+}
+
+#search-form {
+    background: transparent;
+}
+
+#voice-search-button .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--text {
+    background-color: red;
+}
+
+#voice-search-button .yt-spec-button-shape-next--mono.yt-spec-button-shape-next--text:hover {
+    background-color: coral;
+}
+
+#search-clear-button {
+    background-color: transparent !important;
+}
+
+ytd-button-renderer {
+    background: transparent;
+}
+
+.yt-spec-touch-feedback-shape yt-spec-touch-feedback-shape--touch-response:hover {
+    background-color: rgba(255, 255, 255, 0.596);
+}
+
+yt-icon.ytd-logo {
+    color: inherit;
+    background-color: inherit;
+}
+
+.guide-icon.ytd-guide-entry-renderer {
+    color: white;
+    color: white;
+}
+
+html[darker-dark-theme], [darker-dark-theme] [light] {
+    --yt-spec-text-primary: white;
+    --ytd-searchbox-legacy-button-color: grey;
+    --yt-spec-raised-background: rgb(20, 70, 37);
+    --yt-spec-text-secondary: offwhite;
+    --ytd-searchbox-text-color: white;
+
+    --yt-spec-icon-active-other: white;;
+    --yt-spec-icon-inactive: darkgrey;
+    --yt-spec-icon-disabled: darkgrey;
+    --yt-spec-brand-icon-active: white;
+    --yt-spec-brand-icon-inactive: grey;
+    --yt-button-icon-button-text-color: black;
+}

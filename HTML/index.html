@@ -1,0 +1,22 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en" style="height: 100%; width: 100%;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Electron App</title>
+    <link rel="stylesheet" href="../CSS/style.css">
+</head>
+
+<body style="width: 100%; height: 100%; margin: 0; padding: 0;">
+    <webview id="tabwebview" src="../HTML/tabs.html" style="width: auto; height: 35px; margin: 0; padding: 0; border: none;" nodeintegration preload="../organization/tabs.cjs"></webview>
+
+    <webview id="webview-0" src="https://duckduckgo.com" style="width: 100%; height: calc(100% - 40px);;" preload="JS/preload.cjs"
+        partition="persist:myPartition"
+        webpreferences="nodeIntegration=1, contextIsolation=1, javascript=1, plugins=1, enableBlinkFeatures=WebContentsForceDark"
+        class="open-webview">
+    </webview>
+</body>
+
+</html>
