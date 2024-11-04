@@ -18,7 +18,9 @@ function setup() {
 
     const tabsContainer = document.querySelector('.browser-tabs'),
         tabs = document.querySelectorAll('.tab'),
-        addTabButton = document.querySelector('.add-tab');
+        addTabButton = document.querySelector('#addtabbtn'),
+        settingsbtn = document.querySelector('#settingsbtn');
+
     tabs.forEach(tab => tabClick(tab, tabsContainer));
 
     addTabButton.addEventListener('click', () => {
@@ -35,6 +37,8 @@ function setup() {
         // add click event listener to the new tab
         newTab.addEventListener('click', () => tabClick(newTab, tabsContainer));
     });
+
+    settingsbtn.addEventListener('click', () => ipcRenderer.send('open-settings'))
 }
 
 

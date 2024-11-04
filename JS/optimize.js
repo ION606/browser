@@ -61,4 +61,4 @@ function optimize() {
 }
 
 if (document.readyState === 'complete' && !sessionStorage.getItem('ran-optimize')) optimize();
-
+else window.addEventListener('DOMContentLoaded', optimize);

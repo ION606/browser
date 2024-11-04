@@ -49,6 +49,7 @@ html {
     align-items: center;
     margin-left: auto;
     transition: background-color 0.3s, color 0.3s;
+    margin-right: 5px;
 }
 
 .add-tab:hover {
@@ -58,4 +59,15 @@ html {
 
 button {
     cursor: pointer;
+}
+
+#settingsbtn {
+    background-color: transparent;
+    color: black;
+    border-radius: 50%;
+    padding: 7px;
+}
+
+#settingsbtn:hover {
+    background-color: #3b3b5a46;
 }

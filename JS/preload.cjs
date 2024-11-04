@@ -71,7 +71,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
 	onReceive: (channel, func) => {
 		ipcRenderer.on(channel, (event, ...args) => func(...args));
 	},
-	checkperms: (sitehostname) => ipcRenderer.send('get-site-perms', sitehostname)
+	checkperms: (sitehostname) => ipcRenderer.send('get-site-perms', sitehostname),
+	promptperms: () => ipcRenderer.send('prompt-terms', window.location.hostname)
 });
 
 // ipcRenderer.on('tab-opened', (ev, id) => {
@@ -87,7 +88,7 @@ contextBridge.exposeInMainWorld('tabAPI', {
 	addTab: (url) => ipcRenderer.send('add-tab', url || 'about:blank')
 });
 
-const load = () => {
+const load = async () => {
 	console.info("PRELOAD LOADED!");
 
 	if (window.location.origin === 'lite.duckduckgo.com') {

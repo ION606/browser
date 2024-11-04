@@ -1,8 +1,9 @@
 import { StaticNetFilteringEngine } from '@gorhill/ubo-core';
-import fs from 'fs/promises';
+import fsPromise from 'fs/promises';
 import { checkInternetConnectivity } from '../utils/misc.js';
 import loggermod from '../utils/logger.cjs';
-const { logger } = loggermod;
+const { logger } = loggermod,
+    adblockcachepath = 'cache/adblock';
 
 
 const blocklists = [
@@ -26,33 +27,42 @@ const blocklists = [
 
 
 async function fetchList(url) {
-    return fetch(url).then(r => {
-        return r.text();
-    }).then(raw => {
-        return { raw };
-    }).catch(reason => {
-        logger.error(reason);
-    });
+    return fetch(url)
+        .then(r => r.text())
+        .then(raw => ({ raw }))
+        .catch(reason => logger.error(reason));
 }
 
 
 const snfe = await StaticNetFilteringEngine.create();
 
-// const rsf = await fetch('https://api.github.com/repos/uBlockOrigin/uAssets/contents/filters'),
-//     safeLists = (await rsf.json()).map(o => o.download_url);
+const apiUrl = `https://api.github.com/repos/uBlockOrigin/uAssets/contents/filters`;
+const getFilesFromDirectory = async () => {
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+
+        // check if the response data is an array (list of files)
+        if (Array.isArray(data)) return data.filter(file => file.type === 'file').map(o => o.download_url);
+        else console.log('No files found or the directory path is incorrect.');
+    } catch (error) {
+        console.error('Error fetching files:', error.message);
+    }
+};
 
 const pathToSelfie = 'cache/selfie.txt';
+if (!(await import('fs')).existsSync(adblockcachepath)) await fsPromise.mkdir(adblockcachepath);
 
 // Up to date serialization data (aka selfie) available?
 let selfie;
-const ageInDays = await fs.stat(pathToSelfie).then(stat => {
+const ageInDays = await fsPromise.stat(pathToSelfie).then(stat => {
     const fileDate = new Date(stat.mtime);
     return (Date.now() - fileDate.getTime()) / (7 * 24 * 60 * 60);
 }).catch(() => Number.MAX_SAFE_INTEGER);
 
 // Use a selfie if available and not older than 7 days
 if (ageInDays <= 7) {
-    selfie = await fs.readFile(pathToSelfie, { encoding: 'utf8' })
+    selfie = await fsPromise.readFile(pathToSelfie, { encoding: 'utf8' })
         .then(data => typeof data === 'string' && data !== '' && data)
         .catch(() => { });
     if (typeof selfie === 'string') {
@@ -63,11 +73,14 @@ if (ageInDays <= 7) {
 // Fetch filter lists if no up to date selfie available
 if (!selfie && (await checkInternetConnectivity())) {
     logger.info(`Fetching lists...`);
-    await snfe.useLists(blocklists.map(fetchList).filter(o => o));
+    const totalLists = new Set(blocklists.concat(...(await getFilesFromDirectory())));
+    await snfe.useLists([...totalLists].map(fetchList).filter(o => o));
+
+    logger.info(`using ${totalLists.size} adblock lists`)
 
     const selfie = await snfe.serialize();
-    fs.mkdir('cache', { recursive: true });
-    await fs.writeFile(pathToSelfie, selfie);
+    fsPromise.mkdir('cache', { recursive: true });
+    await fsPromise.writeFile(pathToSelfie, selfie);
 }
 
 

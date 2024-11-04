@@ -5,6 +5,8 @@ import { addEl, isValidURL } from "./misc.js";
 import { startinject } from "./ipc.js";
 import intercept, { noworker } from "../serverJS/intercept.js";
 import loggermod from '../utils/logger.cjs';
+import { askUserQuestion, getSitePerms, promptForPerms, setSitePerms } from "./dialogue.js";
+import { getCurrentWindow } from "../serverJS/tabs_server.js";
 const { logger } = loggermod;
 
 
@@ -65,6 +67,36 @@ export async function createWebview(tabId, currentWindow, customSession, preload
 		addEl(view, u?.hostname);
 		startinject(view, uid);
 	});
+
+	let perms;
+
+	const refreshperms = async (_, u) => {
+		perms = await getSitePerms(null, isValidURL(u)?.hostname);
+	}
+	view.webContents.on('did-navigate', refreshperms);
+
+	view.webContents.setWindowOpenHandler((details) => {
+		// let run out for an automatic "deny"
+		const hostname = isValidURL(view.webContents.getURL())?.hostname;
+
+		if (!perms) promptForPerms(getCurrentWindow(), hostname).then(() => refreshperms(null, hostname));
+		// else if (perms['popups'] === 'ask') askUserQuestion(view, 'allow popups', `allow popups from ${hostname}`)
+		else {
+			const permsJSON = JSON.parse(perms);
+
+			if (permsJSON['popups'] === 'ask') {
+				askUserQuestion(getCurrentWindow(), 'safety prompt', `allow ${hostname} to open popups?`)
+					.then(allowed => setSitePerms(null, hostname, 'popups', allowed ? 'allow' : 'deny'))
+					.catch(console.error)
+					.finally(() => refreshperms(null, hostname));
+			}
+			if (permsJSON['popups'] === 'allow') return { action: 'allow' };
+		}
+
+		// fall through
+		return { action: 'deny' };
+	});
+
 
 	view.webContents.setBackgroundThrottling(true);
 	resizeWebView();

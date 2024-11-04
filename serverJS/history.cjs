@@ -52,9 +52,33 @@ async function setupRedis() {
         .connect();
 
     // clear history on browser boot
-    client.flushDb();
+    let cursor = 0;
+
+    do {
+        const result = await client.scan(cursor, { MATCH: `searchHistory:*`, COUNT: 100 });
+        cursor = result.cursor || 0;
+        const keys = result.keys;
+        if (keys.length > 0) await client.del(...keys);
+    } while (cursor !== 0);
+
+    // await client.flushDb();
 
     logger.info('Redis Client Connected!');
 }
 
-module.exports = { setupRedis, redisclient: client, getHistory, addHistory, displayHistory, quitRedis };
+
+/**
+ * 
+ * @returns {Promise<import('redis').RedisClientType>}
+ */
+const getClient = () => {
+    return new Promise(resolve => {
+        const intid = setInterval(() => {
+            if (!client) return;
+            resolve(client);
+            clearInterval(intid);
+        }, 100);
+    })
+}
+
+module.exports = { setupRedis, redisclient: getClient, getHistory, addHistory, displayHistory, quitRedis };

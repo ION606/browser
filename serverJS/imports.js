@@ -6,11 +6,12 @@ import { getSavedTabs, loadTabs } from '../utils/clearCache.js';
 import flushCookies from '../utils/cookies.js';
 import { askUserQuestion } from '../utils/dialogue.js';
 import ipcinit from '../utils/ipc.js';
-import { checkInternetConnectivity } from '../utils/misc.js';
+import { checkInternetConnectivity, isValidURL } from '../utils/misc.js';
 import { findPath } from '../utils/paths.js';
 import { createWebview, handleWebViewInit } from '../utils/webviewHelpers.js';
+import blocked from './adblock.js';
 
-const { setupRedis, quitRedis } = await import('../serverJS/history.cjs');
+const { setupRedis, quitRedis, redisclient } = await import('../serverJS/history.cjs');
 const { logger } = loggermod;
 
 export {
@@ -28,5 +29,8 @@ export {
     createWebview,
     handleWebViewInit,
     setupRedis,
-    quitRedis
+    quitRedis,
+    redisclient,
+    blocked,
+    isValidURL
 };

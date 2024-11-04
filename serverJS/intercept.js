@@ -31,7 +31,14 @@ export default async function intercept(request, uid) {
 	try {
 		const u = new URL(request.url);
 
-		if (u.protocol === 'file:' || u.hostname.startsWith('ion-local')) {
+		if (u.hostname.startsWith('ion-adblock')) {
+			const links = await request.json();
+			console.log(links);
+			
+			const r = links.map(l => ([l, blocked(l)]));
+			return new Response(JSON.stringify(r));
+		}
+		else if (u.protocol === 'file:' || u.hostname.startsWith('ion-local')) {
 			const filePath = await findPath(u.pathname.split('/')?.at(-1), true);
 
 			if (!filePath || !fs.existsSync(filePath)) return new Response(`file"${filePath}"  not found!`, { status: 404 });
@@ -117,20 +124,6 @@ export default async function intercept(request, uid) {
 			}
 
 			return r;
-
-			/*
-			REMOVED BECAUSE IT'S TOO EXPENSIVE (SIGKILL-ed)
-			// https://accounts.google.com/v3/signin/_/AccountsSignInUi/browserinfo?f.sid=3210847140573431127&bl=boq_identityfrontendauthuiserver_20241015.01_p0&hl=en&_reqid=139420&rt=j
-			if (request.url === 'https://www.youtube.com/' || skip.includes(u.hostname)) return net.fetch(request);
-
-			let newURL = request.url;
-			if (u.hostname.includes('duckduckgo.com')) newURL += (u.search) ? '&kae=d&kp=-2' : '?kae=d';
-			else if (u.hostname.includes('google.com')) newURL += (u.search) ? '&safe=off&&pccc=1' : '?pccc=1';
-
-			const r = await net.fetch(request);
-
-			return r;
-			*/
 		}
 	}
 	catch (err) {

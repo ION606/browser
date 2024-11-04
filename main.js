@@ -3,12 +3,15 @@ import { app, BaseWindow, BrowserWindow, session, pushNotifications } from 'elec
 import { exec } from 'child_process';
 import path from 'path';
 import {
-    logger, intercept, setUpShortcuts, organizeTabIds,
+    logger, intercept, setUpShortcuts, organizeTabIds, isValidURL,
     getSavedTabs, loadTabs, flushCookies, askUserQuestion,
     ipcinit, checkInternetConnectivity, findPath, createWebview,
-    handleWebViewInit, setupRedis, quitRedis
+    handleWebViewInit, setupRedis, quitRedis, redisclient, blocked
 } from './serverJS/imports.js';
+import { getSitePerms, promptForPerms } from './utils/dialogue.js';
+import { getCurrentWindow } from './serverJS/tabs_server.js';
 
+// await (await import('./utils/args.js')).handleArgs();
 
 await setupRedis();
 export const uid = 1,
@@ -60,8 +63,9 @@ async function createWindow(customSession) {
         if (r) loadTabs(customSession, tabs);
     }
     else {
-        // mainWebView.webContents('https://duckduckgo.com/?t=h_&hps=1&start=1&q=hi&ia=web');
-        mainWebView.webContents.loadURL('https://www.youtube.com/watch?v=aPO5JaShu2U', { userAgent: agent });
+        mainWebView.webContents.loadURL('https://hianime.to');
+        // mainWebView.webContents.loadURL('https://duckduckgo.com/?t=h_&hps=1&start=1&q=hi&ia=web');
+        // mainWebView.webContents.loadURL('https://www.youtube.com/watch?v=aPO5JaShu2U', { userAgent: agent });
         // mainWebView.webContents.loadURL('https://www.youtube.com', { userAgent: agent });
         // mainWebView.webContents.loadURL('https://electronjs.org');
         mainWebView.webContents.setBackgroundThrottling(true);
@@ -80,12 +84,25 @@ app.on('open-url', (e, webURL) => {
 // listen for app ready event to create window
 app.whenReady().then(async () => {
     const customSession = session.fromPartition(partitionName);
-    customSession.setPermissionRequestHandler((webContents, permission, callback) => {
-        // handle third-party cookies
-        if (permission === 'media' || permission === 'display-capture' || permission === 'notifications' || permission === 'fullscreen') {
-            callback(true);
+    customSession.setPermissionRequestHandler(async (webContents, permission, callback) => {
+        const origin = await webContents.executeJavaScript('window.location.origin');
+        if (!origin) return callback(false);
+
+        const permsRaw = await getSitePerms(null, origin);
+        if (!permsRaw) {
+            await promptForPerms(getCurrentWindow(), origin);
+            return callback(false);
         }
-        else callback(false);
+
+        const permsJSON = JSON.parse(permsRaw);
+        if (permission in permsJSON && permsJSON[permission] === 'ask') {
+            const res = await askUserQuestion(getCurrentWindow(), 'safety prompt', `allow ${origin} to access ${permission}?`);
+            return callback(res);
+        }
+
+        // handle third-party cookies
+        if (permission === 'media' || permission === 'fullscreen') callback(true);
+        else callback(permission in permsJSON && permsJSON[permission] === 'allow');
     });
 
     // session.defaultSession.webRequest.onBeforeRequest((details, cb) => {
@@ -139,6 +156,13 @@ app.on('before-quit', async (e) => {
     quitRedis();
 });
 
+app.on('browser-window-created', async (ev, win) => {
+    const newURL = await win.webContents.executeJavaScript('window.location.href'),
+        origin = await win.webContents.executeJavaScript('window.location.origin');
+
+    console.log(newURL, win.webContents?.opener?.url, blocked(newURL, win.webContents?.opener?.url), blocked(newURL));
+    if (blocked(newURL, win.webContents?.opener?.url)) win.close();
+});
 
 app.commandLine.appendSwitch('ignore-gpu-blacklist');
 app.commandLine.appendSwitch('disable-gpu-compositing');

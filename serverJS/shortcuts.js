@@ -15,6 +15,7 @@ export default async function setUpShortcuts(uid) {
         // getCurrentWindow().isFocused() ? getCurrentTab()?.toggleDevTools() : null
     });
     globalShortcut.register('Control+H', () => getCurrentTab()?.webContents.executeJavaScript('window.electronAPI.displayHistory()'));
+    globalShortcut.register('Control+P', () => getCurrentTab()?.webContents.print());
 
     // zoom
     globalShortcut.register('Control+=', () => changeZoom(getCurrentTab(), true));

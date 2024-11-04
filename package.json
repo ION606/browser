@@ -28,6 +28,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron . --trace-warnings --no-sandbox --load-extension",
+    "clearcache": "electron . --trace-warnings --no-sandbox --load-extension --clear-cache",
+    "nocache": "electron . --trace-warnings --no-sandbox --load-extension --no-cache",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
