@@ -10,6 +10,7 @@ import {
 } from './serverJS/imports.js';
 import { getSitePerms, promptForPerms } from './utils/dialogue.js';
 import { getCurrentWindow } from './serverJS/tabs_server.js';
+import addonManager from './addon/addonmanager.js';
 
 // await (await import('./utils/args.js')).handleArgs();
 
@@ -63,10 +64,10 @@ async function createWindow(customSession) {
         if (r) loadTabs(customSession, tabs);
     }
     else {
-        mainWebView.webContents.loadURL('https://hianime.to');
+        // mainWebView.webContents.loadURL('https://hianime.to');
         // mainWebView.webContents.loadURL('https://duckduckgo.com/?t=h_&hps=1&start=1&q=hi&ia=web');
         // mainWebView.webContents.loadURL('https://www.youtube.com/watch?v=aPO5JaShu2U', { userAgent: agent });
-        // mainWebView.webContents.loadURL('https://www.youtube.com', { userAgent: agent });
+        mainWebView.webContents.loadURL('https://www.youtube.com', { userAgent: agent });
         // mainWebView.webContents.loadURL('https://electronjs.org');
         mainWebView.webContents.setBackgroundThrottling(true);
         mainWindow.currentView = mainWebView;
@@ -128,6 +129,7 @@ app.whenReady().then(async () => {
 app.on('web-contents-created', async (e, contents) => {
     // contents.openDevTools({ mode: 'detach' });
     setUpShortcuts(uid);
+    contents.addListener('did-finish-load', () => addonManager(contents));
     const u = await contents.executeJavaScript('window.location.href');
     if (contents.getType() === 'webview') handleWebViewInit(contents);
 });

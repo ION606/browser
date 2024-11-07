@@ -30,7 +30,7 @@ export async function addEl(window, hostname) {
     }
 
     const p = path.resolve(import.meta.dirname, '../CSS', src);
-    console.log(p);
+
     if (src && fs.existsSync(p)) {
         const srccontent = fs.readFileSync(p).toString();
         window.webContents.insertCSS(srccontent);

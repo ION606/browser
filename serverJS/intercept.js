@@ -4,9 +4,9 @@ import fs from "fs";
 import * as history from "./history.cjs";
 const { addHistory } = history;
 import { net, shell } from "electron";
-import spawnworker from "./spawnworker.js";
 import { checkInternetConnectivity } from "../utils/misc.js";
 import loggermod from '../utils/logger.cjs';
+import addonManager from "../addon/addonmanager.js";
 const { logger } = loggermod;
 
 export const noworker = ['www.youtube.com', 'accounts.youtube.com', 'accounts.google.com', '.*\.googlevideo\.com'];
@@ -33,11 +33,12 @@ export default async function intercept(request, uid) {
 
 		if (u.hostname.startsWith('ion-adblock')) {
 			const links = await request.json();
-			console.log(links);
+			// console.log(links);
 			
 			const r = links.map(l => ([l, blocked(l)]));
 			return new Response(JSON.stringify(r));
 		}
+		else if (u.hostname.startsWith('ion-addons')) return new Response(JSON.stringify(await addonManager(request)));
 		else if (u.protocol === 'file:' || u.hostname.startsWith('ion-local')) {
 			const filePath = await findPath(u.pathname.split('/')?.at(-1), true);
 

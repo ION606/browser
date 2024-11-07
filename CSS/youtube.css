@@ -91,12 +91,12 @@ ytd-comment-renderer #content-text {
 
 /* subscribe button */
 ytd-subscribe-button-renderer {
-    background-color: #6b5b95 !important;
+    background-color: #6b5b9500 !important;
     color: #ffffff !important;
 }
 
-ytd-subscribe-button-renderer:hover {
-    background-color: #9d7bcf !important;
+ytd-subscribe-button-renderer:hover * {
+    color: #8f4df3 !important;
 }
 
 #search-form {

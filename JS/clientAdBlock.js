@@ -11,12 +11,12 @@ function checkAdBlock(url, target, features, originalWindowOpen) {
 
 // needs to be inside the function or it'll get assigned twice
 async function setupAdBlock(perms) {
-    // attach listeners to the document body for each event type
-    ['click', 'mousedown', 'mouseup', 'dblclick', 'keydown', 'keyup', 'submit'].forEach((eventType) => {
-        document.body.addEventListener(eventType, (e) => {
-            console.log(`Event ${e.type} triggered by:`, e.target);
-        }, true); // use capture phase
-    });
+    // // attach listeners to the document body for each event type
+    // ['click', 'mousedown', 'mouseup', 'dblclick', 'keydown', 'keyup', 'submit'].forEach((eventType) => {
+    //     document.body.addEventListener(eventType, (e) => {
+    //         console.log(`Event ${e.type} triggered by:`, e.target);
+    //     }, true); // use capture phase
+    // });
 
     const originalWindowOpen = window.open,
         isValidURL = (u) => { try { return new URL(u); } catch (_) { return false; } }

@@ -14,6 +14,10 @@ process.once("loaded", () => {
 			const element = document.querySelector(selector);
 			if (element) element.innerHTML += policy.createHTML(htmlString);
 		},
+		overwriteinner: (selector, htmlString) => {
+			const element = document.querySelector(selector);
+			if (element) element.innerHTML = policy.createHTML(htmlString);
+		},
 		insertBefore: (selector, htmlString) => {
 			const element = document.querySelector(selector);
 			if (element) element.innerHTML = policy.createHTML(htmlString) + element.innerHTML;
