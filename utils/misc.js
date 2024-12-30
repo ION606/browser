@@ -4,7 +4,8 @@ import dns from 'dns';
 import path from 'path';
 
 const history = (fs.readFileSync(path.resolve(import.meta.dirname, '../CSS', 'history.css')).toString()),
-    tabs = (fs.readFileSync(path.resolve(import.meta.dirname, '../CSS', 'tabs.css')).toString());
+    tabs = (fs.readFileSync(path.resolve(import.meta.dirname, '../CSS', 'tabs.css')).toString()),
+    contextmenu = (fs.readFileSync(path.resolve(import.meta.dirname, '../CSS', 'style.css')).toString());
 
 export const isValidURL = (u) => {
     try { return new URL(u); }
@@ -39,6 +40,7 @@ export async function addEl(window, hostname) {
 
     window.webContents.insertCSS(history);
     window.webContents.insertCSS(tabs);
+    window.webContents.insertCSS(contextmenu);
 
     // window.safdocument.addEventListener('')eHTML.addStylesheet(srccontent, `https://ion-local.${window.location.hostname}/${src}`);
     // window.safeHTML.addStylesheet(history, `https://ion-local.${window.location.hostname}/history.css`);

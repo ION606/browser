@@ -24,6 +24,7 @@ export default function init(customSession) {
     ipcMain.on('tab-open', (e, id) => tabModule.openTab(e, id, customSession));
     ipcMain.on('tab-close', (e, id) => tabModule.closeTab(e, id, customSession));
     ipcMain.on('tab-new', (e, id, url) => tabModule.addTab(e, id, customSession, url));
+    ipcMain.on('add-tab-external', (e, url) => tabModule.addTabExternal(url, customSession));
 
     ipcMain.on('set-site-perms', (e, sitehostname, id, value) => setSitePerms(e, sitehostname, id, value));
     ipcMain.on('set-site-perms-all', (e, sitehostname, id, value) => setSitePerms(e, sitehostname, id, value, true));

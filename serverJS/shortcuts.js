@@ -1,6 +1,6 @@
 import { session, globalShortcut } from "electron";
 import { changeZoom } from "../JS/display.js";
-import { getCurrentTab, getCurrentWindow } from "./tabs_server.js";
+import { closeTab, getCurrentTab, getCurrentWindow } from "./tabs_server.js";
 import { logger } from "./imports.js";
 
 
@@ -23,7 +23,11 @@ export default async function setUpShortcuts(uid) {
     globalShortcut.register('Control+Plus', () => changeZoom(getCurrentTab(), false, true));
     
 
-    globalShortcut.register('Control+T', () => window.webContents.executeJavaScript('window.tabAPI.addTab()'))
+    globalShortcut.register('Control+T', () => getCurrentTab()?.webContents.executeJavaScript('window.tabAPI.newTab()'));
+    globalShortcut.register('Control+W', (e) => {
+        console.log(getCurrentTab());
+        closeTab(e, getCurrentTab()?.id)
+    });
 
     // window.webContents.on('did-navigate', async (_, url, code, stat) => {
     //     if (isValidURL(url)?.hostname === 'lite.duckduckgo.com') return;

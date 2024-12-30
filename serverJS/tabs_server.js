@@ -12,7 +12,7 @@ const webViewContentsMap = {}; // Memory storage for active tabs
 /**
  * returns the focused window, if there is no focused window, returns the first one spawned
  */
-const getCurrentWindow = () => {    
+const getCurrentWindow = () => {
     const allWins = BaseWindow.getAllWindows(),
         w = allWins.find((win) => win.isFocused());
     if (!w && allWins.length > 0) return allWins?.at(0);
@@ -26,11 +26,15 @@ const getCurrentTab = () => {
     return cw?.currentView;
 }
 
-const settabqual = (tabId) => getCurrentTab().webContents.executeJavaScript('setQuality()').catch(err => logger.warn(`setting quality for window ${tabId} failed with reason:\`\`\`${err}\`\`\``));
+const settabqual = (tabId) => {
+    const t = (tabId) ? getCurrentWindow()?.contentView.children.find(v => v.id === tabId) : getCurrentTab();
+    const r = t.webContents.executeJavaScript('setQuality()').catch(err => logger.warn(`setting quality for window ${tabId} failed with reason:\`\`\`${err}\`\`\``));
+    return r;
+}
 
 
 /**
- * Switch to the specified view by its ID.
+ * Switch to the specified view by its ID
  * @param {string | Electron.WebContentsView} tabId 
  */
 async function switchToView(tabId) {
@@ -73,11 +77,11 @@ async function switchToView(tabId) {
     // Set the new view as active and add it to the window
     // viewData.webContents.setBackgroundThrottling(true);
     currentWindow.contentView.addChildView(viewData);
-    await viewData.webContents.loadURL('https://start.duckduckgo.com');
+    // await viewData.webContents.loadURL('https://start.duckduckgo.com');
 
     currentWindow.contentView.children.map(c => c.setVisible((c.id === id) || c.id < 0));
     currentWindow.contentView.children.map(c => console.log(c.id, c.webContents.isCurrentlyAudible()));
-    settabqual(tabId);
+    settabqual(id);
 }
 
 
@@ -96,7 +100,7 @@ async function shiftTabToBK(currentWindow, tabId, oldView, customSession) {
 
         // TODO: optimize the page more
         settabqual(tabId);
-        
+
         const newView = await createWebview(tabId, currentWindow, customSession);
         webViewContentsMap[tabId] = newView;
 
@@ -116,6 +120,8 @@ async function shiftTabToBK(currentWindow, tabId, oldView, customSession) {
  * @param {string} [url]
  */
 async function addTab(event, tabId, customSession, url = 'https://duckduckgo.com', isOpen = false) {
+    console.log('opening', url, typeof url);
+
     const currentWindow = getCurrentWindow();
     const tabPath = getLoadPath(tabId),
         currentTab = getCurrentTab();
@@ -128,16 +134,18 @@ async function addTab(event, tabId, customSession, url = 'https://duckduckgo.com
     if (tabPath && fs.existsSync(tabPath)) newView.webContents.loadFile(tabPath);
     else newView.webContents.loadURL(url);
 
-    switchToView(newView);
+    switchToView(newView, url);
 }
 
 /**
  * Close a tab and save its state to disk.
  * @param {string} tabId
  */
-async function closeTab(event, tabId) {
+async function closeTab(_, tabId) {
     const currentWindow = getCurrentWindow();
     const view = webViewContentsMap[tabId];
+
+    console.log(tabId);
 
     if (view && view.id >= 0) {
         await saveTabState(tabId, view.webContents);
@@ -174,4 +182,11 @@ function organizeTabIds() {
 }
 
 
-export { closeTab, addTab, openTab, getCurrentWindow, getCurrentTab, organizeTabIds };
+async function addTabExternal(url = 'https://start.duckduckgo.com') {
+    const tabview = getCurrentWindow()?.contentView.children.find(o => (o.id === -1));
+    await tabview?.webContents.executeJavaScript(`sessionStorage.setItem('templock', "${url}")`);
+    await tabview?.webContents.executeJavaScript("document.querySelector('#addtabbtn')?.click()");
+    await tabview?.webContents.executeJavaScript(`sessionStorage.removeItem('templock')`);
+}
+
+export { closeTab, addTab, openTab, getCurrentWindow, getCurrentTab, organizeTabIds, addTabExternal };

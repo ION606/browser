@@ -89,7 +89,8 @@ ipcRenderer.on('tab-created', (ev, id, url = 'https://duckduckgo.com') => create
 
 contextBridge.exposeInMainWorld('tabAPI', {
 	ping: () => console.info('pong'),
-	addTab: (url) => ipcRenderer.send('add-tab', url || 'about:blank')
+	addTab: (url) => ipcRenderer.send('add-tab', url || 'about:blank'),
+	newTab: (url) => ipcRenderer.send('add-tab-external', url)
 });
 
 const load = async () => {
